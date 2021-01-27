@@ -152,10 +152,16 @@ header h1 {
     right: 15px;
     cursor: pointer;
     color: rgba(255, 255, 255, 0.9);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(76, 175, 80, 0.9);
     outline: none;
     border-radius: 0.25em;
-    border: 1px solid rgba(50, 50, 50, 0.3);
+    box-shadow: 0 3px #999;
+    border: none;
+}
+
+.modal-close-btn:active {
+    box-shadow: 0 0px rgb(73, 73, 73);
+    transform: translateY(1px);
 }
 
 .modal-img {
@@ -190,7 +196,7 @@ header h1 {
     margin: 10px auto auto;
     background: rgba(255, 255, 255, 1);
     border-radius: 0.25em;
-    border: 1px solid rgba(100, 100, 100, 0.3);
+    /* border: 1px solid rgba(100, 100, 100, 0.3); */
 }
 
 
@@ -201,12 +207,34 @@ header h1 {
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.9);
     padding: 0.75em 1.5em;
-    background: rgba(0, 0, 0, 0.8);
+    background:  rgba(76, 175, 80, 0.9);
     border-radius: 0.35em;
-    transition: .4s ease-out;
+    box-shadow: 0 5px #999;
+    border: none;
     outline: none;
   }
-  
+
+.modal-btn-container .disabled {
+    display: inline-block;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.4);
+    padding: 0.75em 1.5em;
+    border: none;
+}
+
+.btn:active {
+    box-shadow: 0 0px rgb(73, 73, 73);
+    transform: translateY(2px);
+}
+
+#modal-prev {
+    margin-right: 30px;
+}
+
+#modal-next {
+    margin-left: 30px;
+}
 
 /* ===================================== 
    Media Queries
@@ -256,8 +284,8 @@ header h1 {
         color: rgba(25, 25, 25, 1); 
     }
 
-    .btn:hover {
+    /* .btn:hover {
         background: rgba(255, 255, 255, 1);
         color: rgba(25, 25, 25, 1); 
-    }
+    } */
 }
