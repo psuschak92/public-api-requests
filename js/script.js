@@ -1,25 +1,29 @@
 // call api for random user
 const randomUser = 'https://randomuser.me/api/';
 // or for multiple users
-const usersUrl = 'https://randomuser.me/api/?results=12&nat=us,gb,au,nz';
+const employeesUrl = 'https://randomuser.me/api/?results=12&nat=us,gb,au,nz';
 const galleryDiv = document.getElementById('gallery');
 const body = document.querySelector('body');
 
-getJSONResponse(usersUrl)
+getJSONResponse(employeesUrl)
     .then(json => {
-        displayUsers(json.results);
+        displayEmployees(json.results);
     })
     .catch(error => {
-        // display html message
-        console.error(error);
+        // if fetch fails display error message to page
+        const message = document.createElement('h2');
+        message.textContent = 'Uh oh! There was an error retrieving the list of employees.';
+        message.style.color = 'red';
+        document.getElementById('gallery').appendChild(message);
+        console.log(error);
     });
 
-// takes a list of user objects and displays them to page
-function displayUsers(employees) {
+// takes a list of user objects and displays them to gallery
+function displayEmployees(employees) {
     employees.forEach((employee, index) => {
         // append modal to body and get modal element back to add to event listener
         const modal = addUserModal(employee, index, employees.length - 1);
-        // new elements intialized each iteration through loop
+        // new employee cards intialized each iteration through loop
         const cardDiv = document.createElement('div');
         const imgDiv = document.createElement('div');
         const infoDiv = document.createElement('div');
@@ -50,7 +54,6 @@ function displayUsers(employees) {
         });
 
         imgDiv.appendChild(img);
-
         infoDiv.appendChild(name);
         infoDiv.appendChild(email);
         infoDiv.appendChild(location);
@@ -59,8 +62,10 @@ function displayUsers(employees) {
         galleryDiv.appendChild(cardDiv);
     });
 }
-
+    // maxPos tracks the total length of the employee list
+    // pos is the index of the current employee object
 function addUserModal(employee, pos, maxPos) {
+    // initialize all modal elements
     const container = document.createElement('div');
     const modalDiv = document.createElement('div');
     const button = document.createElement('button');
@@ -83,10 +88,8 @@ function addUserModal(employee, pos, maxPos) {
     modalDiv.classList.add('modal');
     button.id = 'modal-close-btn';
     button.classList.add('modal-close-btn');
-    strong.textContent = 'X';
     nextButton.id = 'modal-next';
     prevButton.id = 'modal-prev';
-
     modalInfo.classList.add('modal-info-container');
     img.classList.add('modal-img');
     name.classList.add('modal-name');
@@ -99,9 +102,10 @@ function addUserModal(employee, pos, maxPos) {
     birthday.classList.add('modal-text');
     buttonDiv.classList.add('modal-btn-container');
     nextButton.classList.add('modal-next');
-    
     prevButton.classList.add('modal-prev');
     
+    // provide formatted employee data to modal elements
+    strong.textContent = 'X';
     container.style.display = 'none';
     img.src = employee.picture.large;
     img.alt = 'profile picture';
@@ -111,12 +115,13 @@ function addUserModal(employee, pos, maxPos) {
     phone.textContent = employee.cell;
     address.textContent = `${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.state} ${employee.location.postcode}`;
     birthday.textContent = `Birthday: ${formatDOB(employee.dob.date)}`;
-    // close the modal when clicked
+    nextButton.textContent = 'Next';
+    prevButton.textContent = 'Prev';
+
+    // close modal when clicked
     button.addEventListener('click', () => {
         container.style.display = 'none';
     });
-    nextButton.textContent = 'Next';
-    prevButton.textContent = 'Prev';
     nextButton.addEventListener('click', () => {
         container.style.display = 'none';
         container.nextSibling.style.display = 'inline';
@@ -126,6 +131,7 @@ function addUserModal(employee, pos, maxPos) {
         container.previousSibling.style.display = 'inline';
     });
     
+    // disable prev or next button on first and last employee modal
     if (pos > 0 && pos < maxPos) {
         nextButton.classList.add('btn');
         prevButton.classList.add('btn');
@@ -158,10 +164,10 @@ function addUserModal(employee, pos, maxPos) {
 
     return container;
 }
-
+// search function displays any/all matches to input string on submit
 const form = document.querySelector('form');
 const searchField = document.getElementById('search-input');
-form.addEventListener('click', event => {
+form.addEventListener('submit', event => {
     event.preventDefault();
     const gallery = document.getElementById('gallery');
     const employees = gallery.querySelectorAll('h3');
@@ -176,7 +182,17 @@ form.addEventListener('click', event => {
         }
     }
 });
-
+// display all employees when input field cleared
+searchField.addEventListener('keyup', event => {
+    const employees = gallery.querySelectorAll('h3');
+    if (!searchField.value) {
+        for(let i = 0; i < employees.length; i++){
+            const card = employees[i].parentElement.parentElement;
+            card.style.display = 'flex';
+        }
+    }
+});
+// returns promise object in json format
 function getJSONResponse(url) { 
     return fetch(url, {
         method: 'GET',
@@ -184,16 +200,14 @@ function getJSONResponse(url) {
             'Content-Type': 'application/json',
         },
     })
-    .then(response => response.json())
-    .catch(error => {
-        console.log(error);
-    });
+    .then(response => response.json());
 }
-
+// reformats employee date of birth string
 function formatDOB(dob) {
     const match = /^(\d{4})-(\d{2})-(\d{2})?/.exec(dob);
     return `${match[2]}-${match[3]}-${match[1]}`;
 }
+
 // const res = new XMLHttpRequest();
 // res.onreadystatechange = function() {
 //     if (this.readyState === 4 && this.status === 200) {
