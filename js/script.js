@@ -10,8 +10,8 @@ getJSONResponse(employeesUrl)
         displayEmployees(json.results);
     })
     .catch(error => {
-        // if fetch fails display error message to page
-        const message = document.createElement('h2');
+        // if fetch fails display error message to gallery
+        const message = document.createElement('h3');
         message.textContent = 'Uh oh! There was an error retrieving the list of employees.';
         message.style.color = 'red';
         document.getElementById('gallery').appendChild(message);
@@ -172,14 +172,20 @@ form.addEventListener('submit', event => {
     const gallery = document.getElementById('gallery');
     const employees = gallery.querySelectorAll('h3');
     const val = searchField.value.toLowerCase();
+    let empty = true;
     for(let i = 0; i < employees.length; i++){
         const name = employees[i].textContent.toLowerCase();
         const card = employees[i].parentElement.parentElement;
         if (!name.includes(val)) {
             card.style.display = 'none';
-        } else if (val === '') {
-            card.style.display = 'flex';
+        } else if (name.includes(val)) {
+            empty = false;
         }
+    }
+    if (empty) {
+        const message = document.createElement('h3');
+        message.textContent = 'Uh oh! The search did not return any matches.';
+        document.getElementById('gallery').appendChild(message);
     }
 });
 // display all employees when input field cleared
