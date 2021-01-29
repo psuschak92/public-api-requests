@@ -164,6 +164,13 @@ function addUserModal(employee, pos, maxPos) {
 
     return container;
 }
+
+// show a helpful message if search returns no results
+const message = document.createElement('p');
+message.textContent = 'Uh oh! Couldn\'t find anyone by that name.';
+message.classList.add('hide');
+galleryDiv.appendChild(message);
+
 // search function displays any/all matches to input string on submit
 const form = document.querySelector('form');
 const searchField = document.getElementById('search-input');
@@ -172,26 +179,32 @@ form.addEventListener('submit', event => {
     const gallery = document.getElementById('gallery');
     const employees = gallery.querySelectorAll('h3');
     const val = searchField.value.toLowerCase();
-    let empty = true;
+    let noResults = true;
     for(let i = 0; i < employees.length; i++){
         const name = employees[i].textContent.toLowerCase();
         const card = employees[i].parentElement.parentElement;
+        console.log(card);
         if (!name.includes(val)) {
             card.style.display = 'none';
         } else if (name.includes(val)) {
-            empty = false;
+            noResults = false;
+        } else if (val === '') {
+            card.style.display = 'flex';
         }
     }
-    if (empty) {
-        const message = document.createElement('h3');
-        message.textContent = 'Uh oh! The search did not return any matches.';
-        document.getElementById('gallery').appendChild(message);
+    if(noResults) {
+        message.classList.remove('hide');
+        message.classList.add('show');
     }
 });
 // display all employees when input field cleared
 searchField.addEventListener('keyup', event => {
-    const employees = gallery.querySelectorAll('h3');
+    const employees = galleryDiv.querySelectorAll('h3');
     if (!searchField.value) {
+        if(message.classList.contains('show')) {
+            message.classList.remove('show');
+            message.classList.add('hide');
+        }
         for(let i = 0; i < employees.length; i++){
             const card = employees[i].parentElement.parentElement;
             card.style.display = 'flex';
