@@ -183,7 +183,6 @@ form.addEventListener('submit', event => {
     for(let i = 0; i < employees.length; i++){
         const name = employees[i].textContent.toLowerCase();
         const card = employees[i].parentElement.parentElement;
-        console.log(card);
         if (!name.includes(val)) {
             card.style.display = 'none';
         } else if (name.includes(val)) {
